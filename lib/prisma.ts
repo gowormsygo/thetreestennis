@@ -6,7 +6,10 @@ import path from 'path';
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
 function createPrisma() {
-  const dbPath = path.resolve(process.cwd(), 'prisma/dev.db');
+  const defaultDbPath = 'prisma/dev.db';
+  const dbUrl = process.env.DATABASE_URL;
+  const resolvedPath = dbUrl ? dbUrl.replace(/^file:/, '') : defaultDbPath;
+  const dbPath = path.resolve(process.cwd(), resolvedPath);
   const sqlite = new Database(dbPath);
   const adapter = new PrismaBetterSqlite3(sqlite);
   return new PrismaClient({ adapter });
