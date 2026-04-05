@@ -41,7 +41,10 @@ export async function POST(request) {
 
     return NextResponse.json({ user, isNew: true });
   } catch (error) {
-    console.error('Auth error:', error);
-    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
+    console.error('Auth error:', error?.message ?? error);
+    const message = process.env.NODE_ENV === 'development'
+      ? String(error?.message ?? error)
+      : 'Something went wrong. Please try again.';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
