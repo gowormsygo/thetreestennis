@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@theme {
+  --color-court-green: #2D6A2D;
+  --color-court-light: #4A9E4A;
+  --color-court-bg: #F0FAF0;
+}
+
+@layer base {
+  html {
+    font-size: 18px;
+  }
+  body {
+    background-color: #F0FAF0;
+    color: #1f2937;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    background-color: #15803d;
+    color: white;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 1.125rem;
+    transition: background-color 150ms;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary:hover { background-color: #166534; }
+  .btn-primary:active { background-color: #14532d; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background-color: white;
+    color: #15803d;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 1.125rem;
+    transition: background-color 150ms;
+    width: 100%;
+    border: 2px solid #15803d;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { background-color: #f9fafb; }
+
+  .btn-danger {
+    background-color: #dc2626;
+    color: white;
+    font-weight: 700;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    transition: background-color 150ms;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-danger:hover { background-color: #b91c1c; }
+
+  .card {
+    background-color: white;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
+    padding: 1.5rem;
+  }
+
+  .input-field {
+    width: 100%;
+    border: 2px solid #d1d5db;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 1.125rem;
+    outline: none;
+    transition: border-color 150ms;
+    box-sizing: border-box;
+  }
+  .input-field:focus { border-color: #16a34a; }
+
+  .slot-available {
+    border: 2px solid #22c55e;
+    background-color: #f0fdf4;
+    color: #166534;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 150ms;
+    font-weight: 600;
+  }
+  .slot-available:hover { background-color: #dcfce7; }
+
+  .slot-taken {
+    border: 2px solid #e5e7eb;
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+    cursor: not-allowed;
+    font-weight: 600;
+  }
+
+  .slot-selected {
+    border: 2px solid #15803d;
+    background-color: #15803d;
+    color: white;
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+}
