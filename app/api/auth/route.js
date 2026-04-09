@@ -2,10 +2,15 @@ import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
 import { normalizeMobile } from '../../../lib/utils';
 
+export const dynamic = 'force-dynamic';
+
 // POST /api/auth — login or register with name + mobile
 export async function POST(request) {
   try {
-    const { name, mobile } = await request.json();
+    const body = await request.json();
+    const { name, mobile } = body;
+
+    console.log('[auth] POST received, name:', name, 'mobile:', mobile ? '***' : undefined);
 
     if (!name || !mobile) {
       return NextResponse.json({ error: 'Name and mobile number are required.' }, { status: 400 });
@@ -27,7 +32,7 @@ export async function POST(request) {
     });
 
     if (user) {
-      // User exists — return their profile (name might differ, that's fine)
+      console.log('[auth] existing user found, id:', user.id);
       return NextResponse.json({ user, isNew: false });
     }
 
@@ -39,12 +44,13 @@ export async function POST(request) {
       },
     });
 
+    console.log('[auth] new user created, id:', user.id);
     return NextResponse.json({ user, isNew: true });
   } catch (error) {
-    console.error('Auth error:', error?.message ?? error);
-    const message = process.env.NODE_ENV === 'development'
-      ? String(error?.message ?? error)
-      : 'Something went wrong. Please try again.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error('[auth] ERROR:', error?.message ?? error, error?.stack);
+    return NextResponse.json(
+      { error: 'Server error: ' + (error?.message ?? 'Unknown error') },
+      { status: 500 }
+    );
   }
 }

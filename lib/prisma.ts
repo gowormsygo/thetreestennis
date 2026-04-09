@@ -1,29 +1,19 @@
 import { PrismaClient } from '../generated/prisma/client';
 import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
-import Database from 'better-sqlite3';
-import path from 'path';
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-function getDbPath(): string {
+function createPrisma(): PrismaClient {
+  // DATABASE_URL must be in SQLite "file:" form, e.g. "file:./prisma/dev.db"
   const url = process.env.DATABASE_URL ?? 'file:./prisma/dev.db';
-  // DATABASE_URL for SQLite is in the form "file:./path/to/db" or "file:/absolute/path"
-  const filePart = url.startsWith('file:') ? url.slice(5) : url;
-  // Resolve relative paths from the project root
-  return path.isAbsolute(filePart)
-    ? filePart
-    : path.resolve(process.cwd(), filePart);
-}
-
-function createPrisma() {
-  const dbPath = getDbPath();
-  const sqlite = new Database(dbPath);
-  const adapter = new PrismaBetterSqlite3(sqlite);
+  console.log('[prisma] creating client, db url:', url);
+  // Pass the url config to the adapter — it opens the SQLite file internally
+  const adapter = new PrismaBetterSqlite3({ url });
   return new PrismaClient({ adapter });
 }
 
+// Cache in globalThis so only one connection exists per Node.js process
 const prisma = globalForPrisma.prisma ?? createPrisma();
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+globalForPrisma.prisma = prisma;
 
 export default prisma;

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
+import { timesOverlap, getTodayStr, getMaxDateStr, timeToMinutes } from '../../../lib/utils';
 
 export const dynamic = 'force-dynamic';
-import { timesOverlap, getTodayStr, getMaxDateStr, timeToMinutes, minutesToTime } from '../../../lib/utils';
 
 // GET /api/bookings?userId=123
 export async function GET(request) {
@@ -10,7 +10,9 @@ export async function GET(request) {
     const { searchParams } = new URL(request.url);
     const userId = parseInt(searchParams.get('userId'), 10);
 
-    if (!userId) {
+    console.log('[bookings] GET userId:', userId);
+
+    if (!userId || isNaN(userId)) {
       return NextResponse.json({ error: 'User ID is required.' }, { status: 400 });
     }
 
@@ -19,17 +21,24 @@ export async function GET(request) {
       orderBy: [{ date: 'asc' }, { startTime: 'asc' }],
     });
 
+    console.log('[bookings] GET found', bookings.length, 'bookings');
     return NextResponse.json({ bookings });
   } catch (error) {
-    console.error('Get bookings error:', error);
-    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
+    console.error('[bookings] GET ERROR:', error?.message ?? error, error?.stack);
+    return NextResponse.json(
+      { error: 'Server error: ' + (error?.message ?? 'Unknown error') },
+      { status: 500 }
+    );
   }
 }
 
 // POST /api/bookings — create a new booking
 export async function POST(request) {
   try {
-    const { userId, date, startTime, endTime, numPlayers } = await request.json();
+    const body = await request.json();
+    const { userId, date, startTime, endTime, numPlayers } = body;
+
+    console.log('[bookings] POST userId:', userId, 'date:', date, 'time:', startTime, '-', endTime);
 
     if (!userId || !date || !startTime || !endTime || !numPlayers) {
       return NextResponse.json({ error: 'All fields are required.' }, { status: 400 });
@@ -89,9 +98,13 @@ export async function POST(request) {
       include: { user: true },
     });
 
+    console.log('[bookings] POST created booking id:', booking.id);
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error) {
-    console.error('Create booking error:', error);
-    return NextResponse.json({ error: 'Something went wrong. Please try again.' }, { status: 500 });
+    console.error('[bookings] POST ERROR:', error?.message ?? error, error?.stack);
+    return NextResponse.json(
+      { error: 'Server error: ' + (error?.message ?? 'Unknown error') },
+      { status: 500 }
+    );
   }
 }
