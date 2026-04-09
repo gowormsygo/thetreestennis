@@ -110,6 +110,9 @@ export default function BookPage() {
           <p className="font-bold text-green-800 text-lg">{user.name}</p>
         </div>
         <div className="flex gap-2">
+          <Link href="/timetable" className="bg-green-100 hover:bg-green-200 text-green-800 font-semibold px-4 py-2 rounded-xl text-sm transition-colors">
+            📅 Week
+          </Link>
           <Link href="/my-bookings" className="bg-green-100 hover:bg-green-200 text-green-800 font-semibold px-4 py-2 rounded-xl text-sm transition-colors">
             My Bookings
           </Link>

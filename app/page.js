@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
@@ -67,6 +68,12 @@ export default function Home() {
         <p className="text-gray-600 mt-2 text-lg">
           Book your slot at the communal tennis court.
         </p>
+        <Link
+          href="/timetable"
+          className="inline-block mt-3 bg-green-100 hover:bg-green-200 text-green-800 font-semibold px-5 py-2 rounded-xl text-sm transition-colors"
+        >
+          📅 View this week's timetable
+        </Link>
       </div>
 
       <div className="card">
