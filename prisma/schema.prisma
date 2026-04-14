@@ -26,3 +26,15 @@ model Booking {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
+
+model Reminder {
+  id         Int      @id @default(autoincrement())
+  title      String
+  type       String   // 'license' | 'rates' | 'payment' | 'anniversary'
+  eventDate  String   // YYYY-MM-DD (the actual event/due date)
+  clientName String?
+  notes      String?
+  completed  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
